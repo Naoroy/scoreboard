@@ -4,29 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const APP = (0, express_1.default)();
-const PORT = process.env.PORT || 3030;
-APP.get('/', (req, res) => {
-    res.send([
-        {
-            date: new Date().toDateString(),
-            task: 'Make a POC of a scoreboard app',
-            sessionsEstimate: 3,
-            sessions: 1,
-            sessionLength: 90,
-            comment: 'Typescript is pretty fun'
-        },
-        {
-            date: new Date().toDateString(),
-            task: 'Build a React frontend',
-            sessionsEstimate: 1,
-            sessions: 1,
-            sessionLength: 90,
-            comment: 'React is pretty fun'
-        },
-    ]);
-});
-APP.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+const body_parser_1 = __importDefault(require("body-parser"));
+const routes_1 = require("./routes");
+require("./models/repositories/userRepository");
+const app = (0, express_1.default)();
+const port = process.env.PORT || 3030;
+app.use(body_parser_1.default.json());
+app.use(routes_1.routes);
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });
 //# sourceMappingURL=index.js.map
