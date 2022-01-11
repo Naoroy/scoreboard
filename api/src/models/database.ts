@@ -3,9 +3,22 @@ import { Database } from 'sqlite3'
 
 const db: any = new Database('scoreboard.db')
 
-function run(sql: string): Promise<any> {
+function run(sql: string, params: any[]): Promise<any> {
     return new Promise((resolve, reject) => {
-        db.run(sql, (err: Error, rows: any[]) => {
+        db.run(sql, params, (err: Error, rows: any[]) => {
+            if (err) {
+                reject(err)
+            }
+            else {
+                resolve(rows)
+            }
+        })
+    })
+}
+function once(sql: string, params: any[]): Promise<any> {
+
+    return new Promise((resolve, reject) => {
+        db.get(sql, params, (err: Error, rows: object[]) => {
             if (err) {
                 reject(err)
             }
@@ -16,9 +29,10 @@ function run(sql: string): Promise<any> {
     })
 }
 
-function query(sql: string, params: any[]): Promise<any> {
+function each(sql: string, params: any[]): Promise<any> {
+
     return new Promise((resolve, reject) => {
-        db.get(sql, params, (err: Error, rows: object[]) => {
+        db.each(sql, params, (err: Error, rows: object[]) => {
             if (err) {
                 reject(err)
             }
@@ -42,4 +56,5 @@ function all(sql: string): Promise<any> {
     })
 }
 
-export { run, all, query }
+
+export { run, all, once, each }

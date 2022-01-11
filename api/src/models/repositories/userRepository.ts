@@ -1,4 +1,4 @@
-import { all, query } from '../database'
+import { all, once } from '../database'
 import { User } from '../../types'
 
 
@@ -16,7 +16,7 @@ function addUser(user: User) {
         const sql = `
         INSERT INTO User (Name, Password, Email) VALUES (?,?,?)
         `
-        query(sql, [ user.Name, user.Password, user.Email ])
+        once(sql, [ user.Name, user.Password, user.Email ])
             .then(resolve).catch(reject)
     })
 }
