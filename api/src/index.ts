@@ -1,30 +1,20 @@
 import express from 'express'
+import bodyParser from 'body-parser'
+import morgan from 'morgan'
+import cors from 'cors'
+import { routes } from './routes'
+import './models/repositories/userRepository'
 
-const APP   = express()
-const PORT  = process.env.PORT || 3030
 
-APP.get('/', (req, res) => {
-  res.send(
-    [
-      {
-        date: new Date().toDateString(),
-        task: 'Make a POC of a scoreboard app',
-        sessionsEstimate: 3,
-        sessions: 1,
-        sessionLength: 90,
-        comment: 'Typescript is pretty fun'
-      },
-      {
-        date: new Date().toDateString(),
-        task: 'Build a React frontend',
-        sessionsEstimate: 1,
-        sessions: 1,
-        sessionLength: 90,
-        comment: 'React is pretty fun'
-      },
-  ])
+const app   = express()
+const port  = process.env.PORT || 3030
+
+app.use(bodyParser.json())
+app.use(morgan('dev'))
+app.use(cors())
+app.use(routes)
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`)
 })
 
-APP.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`)
-})
