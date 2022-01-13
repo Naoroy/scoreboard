@@ -1,19 +1,13 @@
-
-// interface Job {
-//     id: string ,
-//     date: Date,
-//     task: string,
-//     sessionsEstimate: number,
-//     sessions: number,
-//     sessionLength: number,
-//     comment: string
-// }
-/*interface JobInterface {
-    job: Job
-}*/
-
-export default interface JobInterface{
-    id: number;
-    task: string;
-    date: Date;
+interface Job {
+    id: number
+    task: string
+    date: Date
 }
+
+interface Task {
+    Id: number
+    Name: string
+    Date: Date
+}
+
+export { Job, Task }

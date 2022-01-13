@@ -1,25 +1,41 @@
 import React from 'react'
-import JobInterface from './../../jobInterface'
+import { Task } from './../../jobInterface'
+import { C } from './../../colors'
 
 const cardStyle = {
-  border: 'solid 3px #555',
+  border: `solid 3px ${C.BLACK}`,
   borderRadius: '10px',
   width: '25rem',
   padding: '1rem',
   margin: '1rem',
-  background: '#FED'
+  background: C.YELLOW
+}
+const deleteBtnStyle = {
+  background: C.RED,
+  borderRadius: '50%',
+  height: '2rem',
+  width: '2rem'
 }
 
-class Card extends React.Component <JobInterface> {
-  constructor (props: { job: JobInterface }) {
-    super(props.job)
-    console.log(props)
+type CardProps = {
+  Id: number
+  Name: string
+  deleteTask: (id:number) => any
+}
+class Card extends React.Component <CardProps> {
+  constructor (props: CardProps) {
+    super(props)
   }
+
+  deleteTask() {
+    this.props.deleteTask(this.props.Id)
+  }
+
   render() {
     return (
-      <div style={cardStyle} key={this.props.id}>
-        <p>{this.props.task}</p>
-        <p>{this.props.date.toDateString()}</p>
+      <div style={cardStyle} key={this.props.Id}>
+        <button style={deleteBtnStyle} onClick={() => this.deleteTask()}>x</button>
+        <p>{this.props.Name}</p>
       </div>
     )
   }
