@@ -3,39 +3,28 @@ import ReactDOM from 'react-dom'
 import Card from './components/card/index'
 //import { JobInterface } from './jobInterface'
 
-const jobs: Array<object> = [
-  { id: "a",
-    date: new Date(),
-    task: 'Make a POC of a scoreboard app',
-    sessionsEstimate: 3,
-    sessions: 1,
-    sessionLength: 90,
-    comment: 'Typescript is pretty fun'
-  },
-  {
-    id: "b",
-    date: new Date(),
-    task: 'Build a React frontend',
-    sessionsEstimate: 1,
-    sessions: 1,
-    sessionLength: 90,
-    comment: 'React is pretty fun'
-  },
-]
-
 const appStyle = {
   fontFamily: 'sans-serif',
   background: '#CEF',
   padding: '2rem'
 }
+type Task = { id: number, name: string, date: Date }
 type AppProps = {}
-type AppState = { jobs: Array<object> }
+type AppState = { tasks: Task[] }
 class App extends React.Component<AppProps, AppState> {
+  private api = 'http://localhost:3030'
   constructor(props: {}) {
     super(props)
     this.state = {
-      jobs: jobs
+      tasks: []
     }
+    this.getTasks()
+  }
+
+  async getTasks() {
+    fetch(`${this.api}/user/1/task/`)
+      .then((response) => response.json())
+      .then(console.log)
   }
 
   render() {
@@ -43,13 +32,13 @@ class App extends React.Component<AppProps, AppState> {
       <div style={appStyle}>
         <h1>Scoreboard</h1>
         {
-          this.state.jobs.map((job) => {
-            console.log(job)
+          this.state.tasks.map((task: Task) => {
             return (
               <Card
-                id={job.id}
-                task={job.task}
-                date={job.date}
+                key={task.id}
+                id={task.id}
+                task={task.name}
+                date={task.date}
               />
             )
           })
