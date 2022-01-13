@@ -46,5 +46,17 @@ function updateTask(taskId: number, task: Task) {
     }
 }
 
+function removeTask(taskId: number) {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            DELETE FROM \`Task\`
+            WHERE Id = ?
+            `
+        once(sql, [ taskId ])
+            .then(resolve)
+            .catch(reject)
+    })
+}
 
-export { getTasks, addTask, updateTask }
+
+export { getTasks, addTask, updateTask, removeTask }

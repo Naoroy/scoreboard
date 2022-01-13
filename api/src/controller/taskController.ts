@@ -1,4 +1,4 @@
-import { getTasks, addTask, updateTask } from '../models/repositories/taskRepository'
+import { getTasks, addTask, updateTask, removeTask } from '../models/repositories/taskRepository'
 import { User, Task } from '../types'
 import { Request, Response } from 'express'
 
@@ -34,9 +34,18 @@ function update(req: Request, res: Response) {
         .catch(console.log)
 }
 
+function remove(req: Request, res: Response) {
+    const taskId = req.params.taskId
+    const task = req.body
+
+    removeTask(parseInt(taskId)) 
+        .then(() => res.send('OK'))
+        .catch(console.log)
+}
+
 function isValidTask(task: Task) {
     return (task.Name.length)
 }
 
 
-export default { getAll, insert, update }
+export default { getAll, insert, update, remove }
