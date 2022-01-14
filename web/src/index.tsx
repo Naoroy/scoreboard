@@ -9,6 +9,11 @@ const appStyle = {
   background: C.BLUE,
   padding: '2rem'
 }
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  width: '50%'
+}
 type AppProps = {}
 type AppState = { tasks: Task[], taskname: string }
 class App extends React.Component<AppProps, AppState> {
@@ -18,7 +23,7 @@ class App extends React.Component<AppProps, AppState> {
     super(props)
     this.state = {
       tasks: [],
-      taskname: ''
+      taskname: '',
     }
     this.updateTask = this.updateTask.bind(this)
     this.updateField = this.updateField.bind(this)
@@ -40,8 +45,8 @@ class App extends React.Component<AppProps, AppState> {
 
   addTask(e:any) {
     e.preventDefault()
-    console.log(this.state.taskname)
     const headers = new Headers()
+
     headers.append('Content-Type', 'application/json')
     fetch(`${this.api}/user/1/task`, {
       method: 'POST',
@@ -61,24 +66,25 @@ class App extends React.Component<AppProps, AppState> {
   updateField(e:any) {
     e.preventDefault()
     this.setState({taskname: e.target.value})
-    console.log(this.state.taskname)
   }
 
   render() {
     return (
       <div style={appStyle}>
         <h1>Scoreboard</h1>
-        <form onSubmit={(e) => this.addTask(e)}>
-          <input type="text" onChange={this.updateField}value={this.state.taskname} />
-          <input type="submit" value="+" />
+        <form
+          style={formStyle} 
+          onSubmit={(e) => this.addTask(e)}
+        >
+          <label htmlFor="newTask">Task name</label>
+          <input name="newTask" type="text" onChange={this.updateField}value={this.state.taskname} />
         </form>
         {
           this.state.tasks.map((task: Task) => {
             return (
               <Card
                 key={task.Id}
-                Id={task.Id}
-                Name={task.Name}
+                task={task}
                 deleteTask={() => this.deleteTask(task.Id)}
               />
             )
@@ -88,5 +94,28 @@ class App extends React.Component<AppProps, AppState> {
     )
   }
 }
+class NewTaskForm extends React.Component<{taskname:boolean},{}> {
+  constructor(props:any) {
+    super(props)
+    this.state = {
+      taskname: ''
+    }
+  }
+  addTask(e) {
+    e.preventDefault
+  }
+  render() {
+    return (
+      <form
+        style={formStyle} 
+        onSubmit={this.addTask()}
+      >
+        <label htmlFor="newTask">Task name</label>
+        <input name="newTask" type="text" onChange={this.updateField}value={this.state.taskname} />
+      </form>
+    )
+  }
+}
+
 
 ReactDOM.render(<App />, document.getElementById('app'))

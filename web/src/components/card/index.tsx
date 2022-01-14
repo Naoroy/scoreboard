@@ -16,26 +16,57 @@ const deleteBtnStyle = {
   height: '2rem',
   width: '2rem'
 }
+const updateBtnStyle = {
+  background: C.RED,
+  borderRadius: '50%',
+  height: '2rem',
+  width: '2rem'
+}
 
 type CardProps = {
-  Id: number
-  Name: string
-  deleteTask: (id:number) => any
+  task: any
+  deleteTask: () => any
 }
-class Card extends React.Component <CardProps> {
+type CardState = {
+  showDescription: boolean
+  showUpdateForm: boolean
+}
+class Card extends React.Component <CardProps, CardState> {
   constructor (props: CardProps) {
     super(props)
+    this.updateTask = this.updateTask.bind(this)
+    this.deleteTask = this.deleteTask.bind(this)
+    this.state = {
+      showDescription: false,
+      showUpdateForm: false
+    }
   }
 
-  deleteTask() {
-    this.props.deleteTask(this.props.Id)
+  deleteTask(e:any) {
+    e.stopPropagation()
+    this.props.deleteTask()
   }
 
+  updateTask(e:any):void {
+          e.stopPropagation()
+          this.setState({showUpdateForm: !this.state.showUpdateForm})
+        }
   render() {
     return (
-      <div style={cardStyle} key={this.props.Id}>
-        <button style={deleteBtnStyle} onClick={() => this.deleteTask()}>x</button>
-        <p>{this.props.Name}</p>
+      <div
+        style={cardStyle}
+        key={this.props.task.Id}
+        onClick={() => this.setState({showDescription : !this.state.showDescription})}
+      >
+        <button style={deleteBtnStyle} onClick={this.deleteTask}>x</button>
+        <button style={updateBtnStyle} onClick={this.updateTask}>u</button>
+        <p>{this.props.task.Name}</p>
+
+        {
+          this.state.showDescription
+            ? <p>{this.props.task.Description || '-- No description --'}</p> 
+            : ''
+        }
       </div>
     )
   }
