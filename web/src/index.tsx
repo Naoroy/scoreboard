@@ -26,8 +26,10 @@ class App extends React.Component<AppProps, AppState> {
       taskname: '',
     }
     this.updateTask = this.updateTask.bind(this)
+    this._updateTask = this._updateTask.bind(this)
     this.updateField = this.updateField.bind(this)
     this.addTask = this.addTask.bind(this)
+    this.getTasks = this.getTasks.bind(this)
 
     this.updateTask()
   }
@@ -35,6 +37,20 @@ class App extends React.Component<AppProps, AppState> {
   updateTask() {
     this.getTasks()
       .then(tasks => this.setState({ tasks }))
+  }
+
+  _updateTask(taskId: number, newtask: Task) {
+    const url = `${this.api}/user/1/task/${taskId}`
+    const headers = new Headers()
+    headers.append('Content-Type', 'application/json')
+    fetch(url, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify(newtask)
+    })
+      .then(r => r)
+      .then(this.getTasks)
+
   }
 
   async getTasks() {
@@ -63,6 +79,7 @@ class App extends React.Component<AppProps, AppState> {
     fetch(`${this.api}/user/1/task/${id}`, {method: 'DELETE'})
       .then(this.updateTask)
   }
+
   updateField(e:any) {
     e.preventDefault()
     this.setState({taskname: e.target.value})
@@ -86,6 +103,7 @@ class App extends React.Component<AppProps, AppState> {
                 key={task.Id}
                 task={task}
                 deleteTask={() => this.deleteTask(task.Id)}
+                updateTask={(newtask) => this._updateTask(task.Id, newtask)}
               />
             )
           })

@@ -25,20 +25,25 @@ const updateBtnStyle = {
 
 type CardProps = {
   task: any
+  updateTask: (task:any) => any
   deleteTask: () => any
 }
 type CardState = {
   showDescription: boolean
   showUpdateForm: boolean
+  task: any
 }
 class Card extends React.Component <CardProps, CardState> {
   constructor (props: CardProps) {
     super(props)
-    this.updateTask = this.updateTask.bind(this)
+    this.toggleForm = this.toggleForm.bind(this)
+    this._updateTask = this._updateTask.bind(this)
     this.deleteTask = this.deleteTask.bind(this)
+    this.updateField = this.updateField.bind(this)
     this.state = {
       showDescription: false,
-      showUpdateForm: false
+      showUpdateForm: false,
+      task: this.props.task,
     }
   }
 
@@ -47,11 +52,40 @@ class Card extends React.Component <CardProps, CardState> {
     this.props.deleteTask()
   }
 
-  updateTask(e:any):void {
-          e.stopPropagation()
-          this.setState({showUpdateForm: !this.state.showUpdateForm})
-        }
+  toggleForm(e:any):void {
+    e.stopPropagation()
+    this.setState({showUpdateForm: !this.state.showUpdateForm})
+  }
+
+  _updateTask(e:any):void {
+    e.preventDefault()
+    this.props.updateTask(this.state.task)
+    this.setState({ showUpdateForm: false })
+  }
+
+  updateField(e: any, field: any) {
+    const task = this.state.task
+
+    task[field] = e.target.value
+    this.setState({ task: task })
+  }
+
   render() {
+    if (this.state.showUpdateForm) {
+      return (
+        <form
+          style={cardStyle}
+          key={this.props.task.Id}
+          onSubmit={this._updateTask} 
+        >
+          <input type="text" name="taskname" onChange={(e) => this.updateField(e, "Name")} value={this.state.task.Name || ''}/>
+          <input type="text" name="description" onChange={(e) => this.updateField(e, "Description")} value={this.state.task.Description|| ''}/>
+          <input type="text" name="comment" onChange={(e) => this.updateField(e, "Comments")} value={this.state.task.Comments || ''}/>
+          <input type="submit" />
+          
+        </form>
+      )
+    }
     return (
       <div
         style={cardStyle}
@@ -59,12 +93,12 @@ class Card extends React.Component <CardProps, CardState> {
         onClick={() => this.setState({showDescription : !this.state.showDescription})}
       >
         <button style={deleteBtnStyle} onClick={this.deleteTask}>x</button>
-        <button style={updateBtnStyle} onClick={this.updateTask}>u</button>
+        <button style={updateBtnStyle} onClick={this.toggleForm}>u</button>
         <p>{this.props.task.Name}</p>
 
         {
           this.state.showDescription
-            ? <p>{this.props.task.Description || '-- No description --'}</p> 
+            ? <p>{this.props.task.Description || '-- No description --'}</p>
             : ''
         }
       </div>
