@@ -1,24 +1,27 @@
 import React from 'react'
-import { Task } from './../../jobInterface'
 import { C } from './../../colors'
 
 const cardStyle = {
   border: `solid 3px ${C.BLACK}`,
   borderRadius: '10px',
-  width: '25rem',
+  //width: '25rem',
   padding: '1rem',
   margin: '1rem',
   background: C.YELLOW
 }
 const deleteBtnStyle = {
   background: C.RED,
-  borderRadius: '50%',
+  borderRadius: '25%',
+  border: 'none',
+  margin: '.2rem',
   height: '2rem',
   width: '2rem'
 }
 const updateBtnStyle = {
-  background: C.RED,
-  borderRadius: '50%',
+  background: C.BLUE,
+  borderRadius: '25%',
+  border: 'none',
+  margin: '.2rem',
   height: '2rem',
   width: '2rem'
 }
@@ -88,13 +91,29 @@ class Card extends React.Component <CardProps, CardState> {
     }
     return (
       <div
+        className={"pure-g"}
         style={cardStyle}
         key={this.props.task.Id}
         onClick={() => this.setState({showDescription : !this.state.showDescription})}
       >
-        <button style={deleteBtnStyle} onClick={this.deleteTask}>x</button>
-        <button style={updateBtnStyle} onClick={this.toggleForm}>u</button>
-        <p>{this.props.task.Name}</p>
+        <div
+          className={"pure-u-18-24"}
+        >
+          <p>{this.props.task.Name}</p>
+        </div>
+        <div
+          className={"pure-u-6-24"}
+        >
+         <button 
+            style={deleteBtnStyle} 
+            onClick={this.deleteTask}
+          > x </button>
+
+          <button
+            style={updateBtnStyle}
+            onClick={this.toggleForm}
+          > u </button>
+        </div>
 
         {
           this.state.showDescription

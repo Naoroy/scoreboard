@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+//import "purecss"
 import Card from './components/card/index'
 import { Task } from './jobInterface'
 import { C } from './colors'
@@ -96,18 +97,26 @@ class App extends React.Component<AppProps, AppState> {
           <label htmlFor="newTask">Task name</label>
           <input name="newTask" type="text" onChange={this.updateField}value={this.state.taskname} />
         </form>
+        <div className="pure-g">
         {
           this.state.tasks.map((task: Task) => {
             return (
-              <Card
+              <div
                 key={task.Id}
-                task={task}
-                deleteTask={() => this.deleteTask(task.Id)}
-                updateTask={(newtask) => this._updateTask(task.Id, newtask)}
-              />
+                // className={"pure-u-1-5 pure-u-sm-1-2 pure-u-md-1-3"}
+                className={"pure-u-1 pure-u-md-1-2 pure-u-lg-1-4"}
+              >
+                <Card
+                  key={task.Id}
+                  task={task}
+                  deleteTask={() => this.deleteTask(task.Id)}
+                  updateTask={(newtask) => this._updateTask(task.Id, newtask)}
+                />
+              </div>
             )
           })
         }
+        </div>
       </div>
     )
   }
