@@ -14,16 +14,12 @@ const deleteBtnStyle = {
   borderRadius: '25%',
   border: 'none',
   margin: '.2rem',
-  height: '2rem',
-  width: '2rem'
 }
 const updateBtnStyle = {
   background: C.BLUE,
   borderRadius: '25%',
   border: 'none',
   margin: '.2rem',
-  height: '2rem',
-  width: '2rem'
 }
 
 type CardProps = {
@@ -32,7 +28,6 @@ type CardProps = {
   deleteTask: () => any
 }
 type CardState = {
-  showDescription: boolean
   showUpdateForm: boolean
   task: any
 }
@@ -44,7 +39,6 @@ class Card extends React.Component <CardProps, CardState> {
     this.deleteTask = this.deleteTask.bind(this)
     this.updateField = this.updateField.bind(this)
     this.state = {
-      showDescription: false,
       showUpdateForm: false,
       task: this.props.task,
     }
@@ -74,28 +68,14 @@ class Card extends React.Component <CardProps, CardState> {
   }
 
   render() {
-    if (this.state.showUpdateForm) {
-      return (
-        <form
-          style={cardStyle}
-          key={this.props.task.Id}
-          onSubmit={this._updateTask} 
-        >
-          <input type="text" name="taskname" onChange={(e) => this.updateField(e, "Name")} value={this.state.task.Name || ''}/>
-          <input type="text" name="description" onChange={(e) => this.updateField(e, "Description")} value={this.state.task.Description|| ''}/>
-          <input type="text" name="comment" onChange={(e) => this.updateField(e, "Comments")} value={this.state.task.Comments || ''}/>
-          <input type="submit" />
-          
-        </form>
-      )
-    }
     return (
       <div
-        className={"pure-g"}
         style={cardStyle}
         key={this.props.task.Id}
-        onClick={() => this.setState({showDescription : !this.state.showDescription})}
       >
+        <header
+          className={"pure-g"}
+        >
         <div
           className={"pure-u-18-24"}
         >
@@ -104,21 +84,43 @@ class Card extends React.Component <CardProps, CardState> {
         <div
           className={"pure-u-6-24"}
         >
-         <button 
-            style={deleteBtnStyle} 
-            onClick={this.deleteTask}
-          > x </button>
-
           <button
             style={updateBtnStyle}
             onClick={this.toggleForm}
+            className={'pure-button'}
           > u </button>
+
+         <button 
+            style={deleteBtnStyle} 
+            onClick={this.deleteTask}
+            className={'pure-button'}
+          > x </button>
         </div>
+        </header>
 
         {
-          this.state.showDescription
-            ? <p>{this.props.task.Description || '-- No description --'}</p>
-            : ''
+          this.state.showUpdateForm 
+            ? (
+              <form
+                style={cardStyle}
+                className={'pure-form pure-form-stacked'}
+                key={this.props.task.Id}
+                onSubmit={this._updateTask} 
+              >
+                <legend>Update task</legend>
+                <label htmlFor="name">Name</label>
+                <input type="text" name="taskname" onChange={(e) => this.updateField(e, "Name")} value={this.state.task.Name || ''}/>
+                <label htmlFor="description">Description</label>
+                <input type="text" name="description" onChange={(e) => this.updateField(e, "Description")} value={this.state.task.Description|| ''}/>
+                <label htmlFor="comment">Comments</label>
+                <input type="text" name="comment" onChange={(e) => this.updateField(e, "Comments")} value={this.state.task.Comments || ''}/>
+                <input type="submit" className={'pure-button'} />
+
+              </form>
+              )
+            : this.props.task.Description
+              ? this.props.task.Description
+              : '-- No description --'
         }
       </div>
     )
