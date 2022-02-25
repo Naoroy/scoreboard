@@ -11,6 +11,15 @@ function getUser() {
     })
 }
 
+function getUserByName(name: string) {
+    return new Promise((resolve, reject) => {
+        const sql = `
+        SELECT * FROM User WHERE Name = ?
+        `
+        once(sql, [name]).then(resolve).catch(reject)
+    })
+}
+
 function addUser(user: User) {
     return new Promise((resolve, reject) => {
         const sql = `
@@ -22,4 +31,4 @@ function addUser(user: User) {
 }
 
 
-export { getUser, addUser }
+export { getUser, addUser, getUserByName }

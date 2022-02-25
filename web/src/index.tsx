@@ -31,6 +31,7 @@ class App extends React.Component<AppProps, AppState> {
     this.updateField = this.updateField.bind(this)
     this.addTask = this.addTask.bind(this)
     this.getTasks = this.getTasks.bind(this)
+    this.login = this.login.bind(this)
 
     this.updateTask()
   }
@@ -81,15 +82,46 @@ class App extends React.Component<AppProps, AppState> {
       .then(this.updateTask)
   }
 
-  updateField(e:any) {
+  updateField(e: any) {
     e.preventDefault()
     this.setState({taskname: e.target.value})
+  }
+
+  login(e: any) {
+    e.preventDefault()
+
+    const user = {
+      Name: "Odin",
+      Password: "1234"
+    }
+    const headers = new Headers()
+
+    headers.set('Content-Type', 'application/json')
+    fetch(`${this.api}/user/login`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(user)
+    })
+    .then(r => r.json())
+    .then(console.log)
   }
 
   render() {
     return (
       <div style={appStyle}>
         <h1>Scoreboard</h1>
+        <form
+          className={"pure-form"}
+          onSubmit={this.login}
+        >
+          <legend>Login</legend>
+          <label htmlFor="Name">Username</label>
+          <input type="text" name="Name" />
+          <label htmlFor="Password">Password</label>
+          <input type="text" name="Password" />
+          <input type="submit" />
+        </form>
+        <br />
         <form
           style={formStyle} 
           onSubmit={(e) => this.addTask(e)}

@@ -3,7 +3,6 @@ import { User, Task } from '../types'
 import { Request, Response } from 'express'
 
 
-
 function getAll(req: Request, res: Response) {
     const userId = req.params.id
     getTasks(parseInt(userId)).then((task: Task[]) => {
@@ -21,8 +20,8 @@ function insert(req: Request, res: Response) {
     }
 
     addTask(task, parseInt(userId))
-        .then(() => { res.send('OK') })
-        .catch(console.log)
+    .then(() => { res.send('OK') })
+    .catch(console.log)
 }
 
 function update(req: Request, res: Response) {
@@ -30,8 +29,8 @@ function update(req: Request, res: Response) {
     const task = req.body
 
     updateTask(parseInt(taskId), task) 
-        .then(() => res.send('OK'))
-        .catch(console.log)
+    .then(() => res.send('OK'))
+    .catch(console.log)
 }
 
 function remove(req: Request, res: Response) {
@@ -39,12 +38,12 @@ function remove(req: Request, res: Response) {
     const task = req.body
 
     removeTask(parseInt(taskId)) 
-        .then(() => res.send('OK'))
-        .catch(console.log)
+    .then(() => res.send('OK'))
+    .catch(console.log)
 }
 
 function isValidTask(task: Task) {
-    return (task.Name.length)
+    return Boolean(task.Name.length)
 }
 
 

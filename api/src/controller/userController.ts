@@ -1,7 +1,7 @@
-import { getUser, addUser } from '../models/repositories/userRepository'
+import { getUser, addUser, getUserByName} from '../models/repositories/userRepository'
 import { User } from '../types'
 import { Request, Response } from 'express'
-
+let session: any
 
 
 function getAll(req: Request, res: Response) {
@@ -31,5 +31,41 @@ function isValidUser(user: User) {
     )
 }
 
+function login(req: Request, res: Response) {
+    const user = req.body
+    session = req.session
+    session.userid = user.Name
+    res.send({ sessionid: session.userid })
+}
 
-export default { getAll, insert }
+function checkUser(req: any, res: Response, next: any) {
+    const session = req.session
+
+    if (session.userid) {
+        getUserByName(session.userid)
+        .then((u: User) => {
+            if (u.Name == session.userid) {
+                next()
+            } else {
+                res.status(403).send('User does not exist')
+            }
+        })
+    } else {
+        res.status(403).send('User does not exist')
+    }
+}
+
+function logout(req: Request, res: Response) {
+    req.session.destroy((err) => {
+        if (err) throw err
+    })
+    res.send('User logged out')
+}
+
+function exists(user: User) {
+    console.log('implement user check')
+    return true
+}
+
+
+export default { getAll, insert, login, checkUser, logout }
